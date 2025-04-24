@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import './Register.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, User, Mail, Phone, Lock } from 'lucide-react';
+import googleLogo from './th2.png';
+import { BsEye } from 'react-icons/bs';
+import lockIcon from './lock.jpg';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -10,6 +14,8 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +27,7 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/register', { 
+      const response = await fetch('http://localhost:5000/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,6 +47,14 @@ const Register = () => {
       setError('An unexpected error occurred.');
       console.error('Registration error:', error);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   return (
@@ -65,6 +79,7 @@ const Register = () => {
           <form onSubmit={handleSubmit}>
             {error && <p className="error">{error}</p>}
             <div className="form-group">
+              <User className="input-icon" /> 
               <input
                 type="text"
                 placeholder="Enter your name"
@@ -74,6 +89,7 @@ const Register = () => {
               />
             </div>
             <div className="form-group">
+              <Mail className="input-icon" /> 
               <input
                 type="email"
                 placeholder="Enter your email"
@@ -83,6 +99,7 @@ const Register = () => {
               />
             </div>
             <div className="form-group">
+              <Phone className="input-icon" /> 
               <input
                 type="tel"
                 placeholder="Enter your Phone"
@@ -91,34 +108,49 @@ const Register = () => {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="form-group password-group">
+              <Lock className="input-icon" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <span
+                className="password-toggle-icon"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <Eye/> : <EyeOff />}
+              </span>
             </div>
-            <div className="form-group">
+            <div className="form-group password-group">
+              <Lock className="input-icon" />
               <input
-                type="password"
+                type={showConfirmPassword ? 'text' : 'password'}
                 placeholder="Confirm your password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
+              <span
+                className="password-toggle-icon"
+                onClick={toggleConfirmPasswordVisibility}
+              >
+                {showConfirmPassword ? <Eye /> : <EyeOff />}
+              </span>
             </div>
             <button type="submit" className="signup-button">
               Sign Up
             </button>
           </form>
           <div className="or-divider">or</div>
-          <button type="button" className="google-signin-button">
+          <button className="google-signin">
+            <img src={googleLogo} alt="Google Logo" />
             Sign In With Google
           </button>
           <div className="signin-link">
-            Already have an account <Link to="/login">Login</Link>
+            Already have an account? <Link to="/login">Login</Link>
           </div>
         </div>
       </div>
